@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
-
 import pandas as pd
 from pandas import ExcelWriter
 import numpy as np
@@ -20,21 +14,26 @@ def __main__():
     window.geometry("800x800")
     window.title("Automation")
 
-    manager_name = tk.Label(text = "Desired Output/Target Value")
-    manager_name.grid(column=0,row=1)
-    departments_Entry = tk.Label(text = "Values to include in filtered output")
-    departments_Entry.grid(column=0,row=2)
+    output_name = tk.Label(text = "Desired Output, This is what the file generated will be named.")
+    output_name.grid(column=0,row=1)
+    column_name = tk.Label(text = "Name of column to be filtered.")
+    column_name.grid(column=0,row=2)
+    filter_Entry = tk.Label(text = "Specify values to filter from column.")
+    filter_Entry.grid(column=0,row=3)
     message = tk.Label(text = "Every time you press 'Filter' an Excel and PDF will generate in correspondance to your specified inputs.")
-    message.grid(column=0,row=3)
+    message.grid(column=0,row=4)
 
-    manager_name_entry = tk.Entry()
-    manager_name_entry.grid(column=1,row=1)
-    departments_Entry = tk.Entry()
-    departments_Entry.grid(column=1,row=2)
+    output_name_entry = tk.Entry()
+    output_name_entry.grid(column=1,row=1)
+    column_name_entry = tk.Entry()
+    column_name_entry.grid(column=1,row=2)
+    filter_Entry = tk.Entry()
+    filter_Entry.grid(column=1,row=3)
     
     def clear_text():
-        manager_name_entry.delete(0, END)
-        departments_Entry.delete(0, END)
+        output_name_entry.delete(0, END)
+        column_name_entry.delete(0, END)
+        filter_Entry.delete(0, END)
         return messagebox.showinfo('New Files Generated','Excel and PDF files generated!')
     
     def converter(name):
@@ -58,8 +57,8 @@ def __main__():
         converter(name)
     
     def string_splitter():
-        name = manager_name_entry.get()
-        string_departments = departments_Entry.get()
+        name = output_name_entry.get()
+        string_departments = filter_Entry.get()
         list_departments = string_departments.split(",")
         classify(name,*list_departments)
     
@@ -70,29 +69,17 @@ def __main__():
         
         excel_file = pd.read_excel(filename)
         
-        global filtered
-        initial = excel_file[excel_file['Last Name'] != 'Test']
-        filtered = initial[initial['Login'] != 'Disabled']
-        
-        
         global grouped
-        value = input("Enter the column you wish to operate on.")
-        grouped = filtered.groupby(str(value))
+        column = column_name_entry.get()
+        grouped = excel_file.groupby(column)
     
         string_splitter()
 
     button=tk.Button(window,text="Filter",command=lambda:[initiator(), clear_text()])
-    button.grid(column=1,row=3)
+    button.grid(column=1,row=4)
     destroy=tk.Button(window, text="Quit", command=window.destroy)
-    destroy.grid(column=1,row=4)
+    destroy.grid(column=1,row=5)
     
     window.mainloop()
 if __name__ == '__main__':
     __main__()
-
-
-# In[ ]:
-
-
-
-
